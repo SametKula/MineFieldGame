@@ -28,4 +28,9 @@ public class Minefield {
         }
 
     }
+    private void setBoardZero() {
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < coll; j++)
+                board[i][j] = 0;
+    }
 }
