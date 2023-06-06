@@ -1,8 +1,25 @@
 package com.sametkula.src.minefield;
 
+import java.util.Random;
+
 public class Minefield {
-    private int[][] board;
     private int coll;
     private int row;
+    private int[][] board;
 
+    private void genereteMine() {
+        Random random = new Random();
+
+        int randomColl = random.nextInt(coll), randomRow = random.nextInt(row), mineCount = 0;
+
+        while (mineCount < coll * row / 4){
+            if (board[randomRow][randomColl] == 0){
+                board[randomRow][randomColl] = 1;
+                mineCount++;
+            }
+            randomColl = random.nextInt(coll);
+            randomRow = random.nextInt(row);
+        }
+
+    }
 }
