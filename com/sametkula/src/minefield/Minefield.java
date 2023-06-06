@@ -7,6 +7,12 @@ public class Minefield {
     private int row;
     private int[][] board;
 
+    public Minefield(int coll, int row) {
+        this.coll = coll;
+        this.row = row;
+        this.board = new int[row][coll];
+    }
+
     private void genereteMine() {
         Random random = new Random();
 
