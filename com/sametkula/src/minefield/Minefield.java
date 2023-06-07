@@ -70,11 +70,18 @@ public class Minefield {
         return false;
     }
     private void printBoard(){
+        System.out.print("       ");
+        for (int i = 1; i <= coll; i++)
+            System.out.print("  " + i );
+        System.out.println();
+
         for (int i = 0; i < row; i++) {
-            for (int j = 0; j < coll; j++)
-                System.out.print(board[i][j] + " ");
-            System.out.println();
+            System.out.print("row:" + (i + 1) + "  ");
+        for (int j = 0; j < coll; j++)
+            System.out.print(String.format("|%2d", board[i][j]));
+            System.out.println("|");
         }
+
     }
 
     public static void main(String[] args) {
