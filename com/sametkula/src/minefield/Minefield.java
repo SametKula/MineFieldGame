@@ -33,4 +33,23 @@ public class Minefield {
             for (int j = 0; j < coll; j++)
                 board[i][j] = 0;
     }
+
+    public boolean checkHolder(int row, int coll){
+        if (board[row][coll] == 1)
+            return true;
+
+        return false;
+    }
+    public int getHoldersNearMines(int row, int coll){
+        int leftUp = board[row - 1][coll - 1], up = board[row][coll - 1], rightUp = board[row + 1][coll - 1],
+                leftDown = board[row - 1][coll + 1], rightDown = board[row + 1][coll + 1], down = board[row][coll + 1],
+                left = board[row - 1][coll], right = board[row + 1][coll];
+
+        return rightDown;
+    }
+    public void selectHolder(int row, int coll){
+        if (checkHolder(row, coll)){
+
+        }
+    }
 }
