@@ -19,8 +19,8 @@ public class Minefield {
         int randomColl = random.nextInt(coll), randomRow = random.nextInt(row), mineCount = 0;
 
         while (mineCount < coll * row / 4){
-            if (board[randomRow][randomColl] == 0){
-                board[randomRow][randomColl] = 1;
+            if (board[randomRow][randomColl] == 0 && board[randomRow][randomColl] != -1){
+                board[randomRow][randomColl] = -1;
                 mineCount++;
             }
             randomColl = random.nextInt(coll);
@@ -35,7 +35,7 @@ public class Minefield {
     }
 
     public boolean checkHolder(int row, int coll){
-        if (board[row][coll] == 1)
+        if (board[row][coll] == -1)
             return true;
 
         return false;
@@ -45,11 +45,27 @@ public class Minefield {
                 leftDown = board[row - 1][coll + 1], rightDown = board[row + 1][coll + 1], down = board[row][coll + 1],
                 left = board[row - 1][coll], right = board[row + 1][coll];
 
-        return rightDown;
-    }
-    public void selectHolder(int row, int coll){
-        if (checkHolder(row, coll)){
+        if (row == 0 && coll == 0)
+            return right + rightDown + down;
+        if (row == 0)
+            return up + right + rightUp + rightDown + down;
+        if (coll == 0)
+            return left + leftDown + down + right + rightDown;
 
+        if (this.row == row && this.coll == coll)
+            return left + leftUp + up;
+        if (row == this.row)
+            return left + leftUp + leftDown + up + down;
+        if (coll == this.coll)
+            return left + leftUp + up + right + rightUp;
+
+        return left + leftUp + leftDown + right + rightDown + rightUp + up + down;
+    }
+    public boolean selectHolder(int row, int coll){
+        if (!checkHolder(row, coll)){
+            board[row][coll] = getHoldersNearMines(row ,coll) * -1;
+            return true;
         }
+        return false;
     }
 }
