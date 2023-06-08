@@ -142,9 +142,9 @@ public class Minefield {
         Scanner kb = new Scanner(System.in);
 
         System.out.print("row: ");
-        int row = Integer.parseInt(kb.nextLine()) - 1;
+        int row = Integer.parseInt(kb.nextLine());
         System.out.print("coll: ");
-        int coll = Integer.parseInt(kb.nextLine()) - 1;
+        int coll = Integer.parseInt(kb.nextLine());
         Minefield minefield = new Minefield(coll, row);
         boolean gameStatus = true;
 
