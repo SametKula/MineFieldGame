@@ -33,14 +33,15 @@ public class Minefield {
 
     }
     private void setBoardZero() {
-        for (int i = 0; i < row; i++)
-            for (int j = 0; j < coll; j++)
-                board[i][j] = 0;
-        for (int i = 0; i < row; i++)
-            for (int j = 0; j < coll; j++)
-                fakeBoard[i][j] = 0;
+        board = setBoardZero(board);
+        fakeBoard = setBoardZero(fakeBoard);
     }
-
+    private int[][] setBoardZero(int[][] board) {
+        for (int i = 0; i < board.length; i++)
+            for (int j = 0; j < board[i].length; j++)
+                board[i][j] = 0;
+        return board;
+    }
     public boolean checkHolder(int row, int coll){
         if (board[row][coll] == -1)
             return true;
@@ -70,9 +71,39 @@ public class Minefield {
         return board[row][coll - 1] + board[row - 1][coll - 1] + board[row + 1][coll - 1] + board[row ][coll + 1] + board[row + 1][coll + 1] + board[row - 1][coll + 1] + board[row - 1][coll] + board[row + 1][coll];
 
     }
+    private int getHoldersNearMines(int row, int coll, int test) {
+        int result = 0;
+
+        if (hasElementRange(row - 1, coll - 1))
+            result += board[row - 1][coll - 1];
+
+        if (hasElementRange(row - 1, coll))
+            result += board[row - 1][coll];
+
+        if (hasElementRange(row - 1, coll + 1))
+            result += board[row - 1][coll + 1];
+
+        if (hasElementRange(row , coll - 1))
+            result += board[row ][coll - 1];
+
+        if (hasElementRange(row , coll + 1))
+            result += board[row ][coll + 1];
+
+        if (hasElementRange(row + 1, coll - 1))
+            result += board[row + 1][coll - 1];
+
+        if (hasElementRange(row + 1, coll))
+            result += board[row + 1][coll];
+
+        if (hasElementRange(row + 1, coll + 1))
+            result += board[row + 1][coll + 1];
+
+        return result;
+
+    }
     public boolean selectHolder(int row, int coll){
         if (!checkHolder(row, coll)){
-            fakeBoard[row][coll] = getHoldersNearMines(row ,coll) * -1;
+            fakeBoard[row][coll] = getHoldersNearMines(row ,coll, 1) * -1;
             return true;
         }
         return false;
@@ -90,26 +121,37 @@ public class Minefield {
             System.out.println("|");
         }
     }
+    public boolean hasElementRange(int row, int coll){
+        if (row < 0 || coll < 0 || row >= this.row || coll >= this.coll)
+            return false;
+        return true;
+    }
     public void testAllHolders(){
         for (int i = 0; i < row; i++)
             for (int j = 0; j < coll; j++){
+                System.out.println("try times: " + (i + j));
                 if (board[i][j] == -1)
                     continue;
-                selectHolder(i, j);
 
+                selectHolder(i, j);
                 printBoard();
             }
     }
 
-    public static void main(String[] args) {
+    public static void run() {
         Scanner kb = new Scanner(System.in);
-        Minefield minefield = new Minefield(9, 9);
-        boolean game = true;
+
+        System.out.print("row: ");
+        int row = Integer.parseInt(kb.nextLine()) - 1;
+        System.out.print("coll: ");
+        int coll = Integer.parseInt(kb.nextLine()) - 1;
+        Minefield minefield = new Minefield(coll, row);
+        boolean gameStatus = true;
 
         minefield.setBoardZero();
         minefield.genereteMine();
         minefield.printBoard();
-        while(game){
+        /*while(game){
             System.out.println("\n\n");
             minefield.printBoard();
             System.out.print("row: ");
@@ -118,7 +160,8 @@ public class Minefield {
             int coll = Integer.parseInt(kb.nextLine()) - 1;
 
             game = minefield.selectHolder(row, coll);
-        }
+        }*/
+        minefield.testAllHolders();
         System.out.println("game over");
     }
 }
