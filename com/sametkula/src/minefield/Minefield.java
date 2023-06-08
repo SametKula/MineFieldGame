@@ -1,6 +1,7 @@
 package com.sametkula.src.minefield;
 
 import java.util.Random;
+import java.util.Scanner;
 
 public class Minefield {
     private int coll;
@@ -67,5 +68,39 @@ public class Minefield {
             return true;
         }
         return false;
+    }
+    private void printBoard(){
+        System.out.print("       ");
+        for (int i = 1; i <= coll; i++)
+            System.out.print("  " + i );
+        System.out.println();
+
+        for (int i = 0; i < row; i++) {
+            System.out.print("row:" + (i + 1) + "  ");
+        for (int j = 0; j < coll; j++)
+            System.out.print(String.format("|%2d", board[i][j]));
+            System.out.println("|");
+        }
+
+    }
+
+    public static void main(String[] args) {
+        Scanner kb = new Scanner(System.in);
+        Minefield minefield = new Minefield(6, 6);
+        boolean game = true;
+
+        minefield.setBoardZero();
+        minefield.genereteMine();
+        minefield.printBoard();
+        while(game){
+            System.out.println("\n\n");
+            minefield.printBoard();
+            System.out.print("row: ");
+            int row = Integer.parseInt(kb.nextLine()) - 1;
+            System.out.print("coll: ");
+            int coll = Integer.parseInt(kb.nextLine()) - 1;
+
+            game = minefield.selectHolder(row, coll);
+        }
     }
 }
