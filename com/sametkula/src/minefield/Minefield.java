@@ -12,6 +12,7 @@ public class Minefield {
         this.boardSize = boardSize;
         this.boardSpace = boardSize * boardSize;
         this.fields = new Field[boardSize][boardSize];
+        this.mineCount = boardSize;
     }
 
     public void run() {
@@ -28,10 +29,11 @@ public class Minefield {
         printBoard();
 
         takeFirstRowAndCol(scanner);
-        openFirstPhase();
 
         addMines();
         updateCounts();
+
+        openFirstPhase();
 
         System.out.println("\n\n\n\n");
 
@@ -89,16 +91,15 @@ public class Minefield {
 
         int count = 0;
 
-        while (count < boardSpace / boardSize) {
+        while (count < boardSize) {
             int r = rd.nextInt(boardSize);
             int c = rd.nextInt(boardSize);
 
-            if (!fields[r][c].isMine && !fields[r][c].isOpen) {
+            if (!fields[r][c].isMine && !fields[r][c].isOpen && !(r == firstRow && c == firstCol)) {
                 fields[r][c].isMine = true;
                 count++;
             }
         }
-        mineCount = count;
     }
 
     private boolean chooseOne(int row, int col, String action) {
@@ -153,8 +154,8 @@ public class Minefield {
     private void openFirstPhase() {
         for (int i = firstRow - 1; i <= firstRow + 1; i++)
             for (int j = firstCol - 1; j <= firstCol + 1; j++)
-                if (i >= 0 && i < boardSize && j < boardSize && j >= 0)
-                    fields[i][j].isOpen = true;
+                if (i >= 0 && i < boardSize && j < boardSize && j >= 0 && !fields[i][j].isMine)
+                    chooseOne(i,j,"choose");
     }
 
     private void prepareBoard() {
