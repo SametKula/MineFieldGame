@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Minefield {
     Field[][] fields;
-    int boardSpace, boardSize, mineCount, firstRow, firstColumn;
+    int boardSpace, boardSize, mineCount, firstRow, firstCol;
 
     public Minefield(int boardSize) {
         this.boardSize = boardSize;
@@ -19,15 +19,7 @@ public class Minefield {
         prepareBoard();
         printBoard();
 
-        System.out.println("enter a row and column:");
-
-        System.out.print("row: ");
-        firstRow = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("col: ");
-        firstColumn = Integer.parseInt(scanner.nextLine());
-        System.out.println();
-
+        takeFirstRowAndCol(scanner);
         openFirstPhase();
 
         addMines();
@@ -65,9 +57,21 @@ public class Minefield {
                 System.out.println("you won");
                 break;
             }
+            System.out.println("\n\n\n\n");
 
         }
 
+    }
+
+    private void takeFirstRowAndCol(Scanner scanner) {
+        System.out.println("enter a row and column;");
+
+        System.out.print("row: ");
+        firstRow = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("col: ");
+        firstCol = Integer.parseInt(scanner.nextLine());
+        System.out.println();
     }
 
     private void addMines() {
@@ -75,7 +79,7 @@ public class Minefield {
 
         int count = 0;
 
-        while (count < boardSpace / 7) {
+        while (count < boardSpace / boardSize) {
             int r = rd.nextInt(boardSize);
             int c = rd.nextInt(boardSize);
 
@@ -138,7 +142,7 @@ public class Minefield {
 
     private void openFirstPhase() {
         for (int i = firstRow - 1; i <= firstRow + 1; i++)
-            for (int j = firstColumn - 1; j <= firstColumn + 1; j++)
+            for (int j = firstCol - 1; j <= firstCol + 1; j++)
                 if (i >= 0 && i < boardSize && j < boardSize && j >= 0)
                     fields[i][j].isOpen = true;
     }
@@ -161,7 +165,7 @@ public class Minefield {
         for (int i = 0; i < this.boardSize; i++) {
             System.out.printf("|%d's row|", i);
             for (int j = 0; j < this.boardSize; j++) {
-                if (fields[i][j].flag)
+                if (fields[i][j].flag && !fields[i][j].isOpen)
                     System.out.print("[+]");
                 else if (fields[i][j].isOpen) {
                     System.out.printf("[%s]", fields[i][j].count);
