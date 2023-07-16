@@ -20,6 +20,7 @@ public class Minefield {
         printBoard();
 
         System.out.println("enter a row and column:");
+
         System.out.print("row: ");
         firstRow = Integer.parseInt(scanner.nextLine());
 
