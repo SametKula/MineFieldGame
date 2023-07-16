@@ -15,6 +15,14 @@ public class Minefield {
     }
 
     public void run() {
+        System.out.println("\n" +
+                "░██╗░░░░░░░██╗██╗██████╗░██████╗░██████╗░██╗██████╗░░█████╗░██╗░░░██╗\n" +
+                "░██║░░██╗░░██║██║██╔══██╗██╔══██╗██╔══██╗██║██╔══██╗██╔══██╗██║░░░██║\n" +
+                "░╚██╗████╗██╔╝██║██████╔╝██║░░██║██████╔╝██║██║░░██║██║░░██║╚██╗░██╔╝\n" +
+                "░░████╔═████║░██║██╔══██╗██║░░██║██╔══██╗██║██║░░██║██║░░██║░╚████╔╝░\n" +
+                "░░╚██╔╝░╚██╔╝░██║██║░░██║██████╔╝██║░░██║██║██████╔╝╚█████╔╝░░╚██╔╝░░\n" +
+                "░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═════╝░╚═╝░░╚═╝╚═╝╚═════╝░░╚════╝░░░░╚═╝░░░");
+
         Scanner scanner = new Scanner(System.in);
         prepareBoard();
         printBoard();
@@ -25,6 +33,7 @@ public class Minefield {
         addMines();
         updateCounts();
 
+        System.out.println("\n\n\n\n");
 
         System.out.println("Info : choose a row and collumb from on board if you want to put a flag in the you enter -1 on the row phase");
 
@@ -53,11 +62,12 @@ public class Minefield {
             }
 
             if (isWin()) {
+                System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
                 printBoard();
                 System.out.println("you won");
                 break;
             }
-            System.out.println("\n\n\n\n");
+            System.out.println("\n\n\n\n\n\n\n\n");
 
         }
 
