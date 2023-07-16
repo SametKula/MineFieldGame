@@ -1,13 +1,12 @@
 package com.sametkula.src.minefield;
 
 
-import org.junit.Test;
-
-import java.util.*;
+import java.util.Random;
+import java.util.Scanner;
 
 public class Minefield {
     Field[][] fields;
-    int boardSpace, boardSize, mineCount;
+    int boardSpace, boardSize, mineCount, firstRow, firstColumn;
 
     public Minefield(int boardSize) {
         this.boardSize = boardSize;
@@ -16,11 +15,23 @@ public class Minefield {
     }
 
     public void run() {
+        Scanner scanner = new Scanner(System.in);
         prepareBoard();
+        printBoard();
+
+        System.out.println("enter a row and column:");
+        System.out.print("row: ");
+        firstRow = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("col: ");
+        firstColumn = Integer.parseInt(scanner.nextLine());
+        System.out.println();
+
+        openFirstPhase();
+
         addMines();
         updateCounts();
 
-        Scanner scanner = new Scanner(System.in);
 
         System.out.println("Info : choose a row and collumb from on board if you want to put a flag in the you enter -1 on the row phase");
 
@@ -49,46 +60,13 @@ public class Minefield {
             }
 
             if (isWin()) {
+                printBoard();
                 System.out.println("you won");
                 break;
             }
 
         }
 
-    }
-
-    private void prepareBoard() {
-        Random rd = new Random();
-
-        for (int i = 0; i < boardSize; i++)
-            for (int j = 0; j < boardSize; j++)
-                fields[i][j] = new Field(i, j);
-
-    }
-
-    private void openAllZeros(int row, int col) {
-        if (row < 0 || row >= boardSize || col < 0 || col >= boardSize || fields[row][col].isOpen || fields[row][col].count != 0) {
-            if (row >= 0 && row < boardSize && col >= 0 && col < boardSize )
-                fields[row][col].isOpen = true;
-            return;
-        }
-
-        fields[row][col].isOpen = true;
-        openAllZeros(row + 1, col);
-        openAllZeros(row - 1, col);
-        openAllZeros(row, col + 1);
-        openAllZeros(row, col - 1);
-    }
-
-    public boolean isWin() {
-        int result = 0;
-
-        for (int i = 0; i < boardSize; i++)
-            for (int j = 0; j < boardSize; j++)
-                if (fields[i][j].isOpen)
-                    result++;
-
-        return result == boardSpace - mineCount;
     }
 
     private void addMines() {
@@ -100,7 +78,7 @@ public class Minefield {
             int r = rd.nextInt(boardSize);
             int c = rd.nextInt(boardSize);
 
-            if (!fields[r][c].isMine) {
+            if (!fields[r][c].isMine && !fields[r][c].isOpen) {
                 fields[r][c].isMine = true;
                 count++;
             }
@@ -108,27 +86,7 @@ public class Minefield {
         mineCount = count;
     }
 
-    private void updateCounts() {
-        for (int i = 0; i < boardSize; i++) {
-            for (int j = 0; j < boardSize; j++) {
-                if (!fields[i][j].isMine)
-                    continue;
-                updateConts(i, j);
-            }
-        }
-    }
-
-    private void updateConts(int row, int col) {
-        for (int i = row - 1; i <= row + 1; i++)
-            for (int j = col - 1; j <= col + 1; j++) {
-                if (i == row && j == col)
-                    continue;
-                if (i >= 0 && i < boardSize && j < boardSize && j >= 0)
-                    fields[i][j].count += 1;
-            }
-    }
-
-    public boolean chooseOne(int row, int col, String action) {
+    private boolean chooseOne(int row, int col, String action) {
         switch (action) {
             case "flag":
                 fields[row][col].flag = true;
@@ -142,7 +100,58 @@ public class Minefield {
         return fields[row][col].isMine;
     }
 
-    public void printBoard() {
+    private void incraseNearOfMines(int row, int col) {
+        for (int i = row - 1; i <= row + 1; i++)
+            for (int j = col - 1; j <= col + 1; j++) {
+                if (i == row && j == col)
+                    continue;
+                if (i >= 0 && i < boardSize && j < boardSize && j >= 0)
+                    fields[i][j].count += 1;
+            }
+    }
+
+    private boolean isWin() {
+        int result = 0;
+
+        for (int i = 0; i < boardSize; i++)
+            for (int j = 0; j < boardSize; j++)
+                if (fields[i][j].isOpen)
+                    result++;
+
+        return result == boardSpace - mineCount;
+    }
+
+    private void openAllZeros(int row, int col) {
+        if (row < 0 || row >= boardSize || col < 0 || col >= boardSize || fields[row][col].isOpen || fields[row][col].count != 0) {
+            if (row >= 0 && row < boardSize && col >= 0 && col < boardSize)
+                fields[row][col].isOpen = true;
+            return;
+        }
+
+        fields[row][col].isOpen = true;
+        openAllZeros(row + 1, col);
+        openAllZeros(row - 1, col);
+        openAllZeros(row, col + 1);
+        openAllZeros(row, col - 1);
+    }
+
+    private void openFirstPhase() {
+        for (int i = firstRow - 1; i <= firstRow + 1; i++)
+            for (int j = firstColumn - 1; j <= firstColumn + 1; j++)
+                if (i >= 0 && i < boardSize && j < boardSize && j >= 0)
+                    fields[i][j].isOpen = true;
+    }
+
+    private void prepareBoard() {
+        Random rd = new Random();
+
+        for (int i = 0; i < boardSize; i++)
+            for (int j = 0; j < boardSize; j++)
+                fields[i][j] = new Field(i, j);
+
+    }
+
+    private void printBoard() {
         System.out.print("        |");
         for (int i = 0; i < boardSize; i++) {
             System.out.printf("%2s|", i);
@@ -155,13 +164,22 @@ public class Minefield {
                     System.out.print("[+]");
                 else if (fields[i][j].isOpen) {
                     System.out.printf("[%s]", fields[i][j].count);
-                }
-                else
+                } else
                     System.out.print("[ ]");
             }
             System.out.println();
         }
 
+    }
+
+    private void updateCounts() {
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                if (!fields[i][j].isMine)
+                    continue;
+                incraseNearOfMines(i, j);
+            }
+        }
     }
 
 
